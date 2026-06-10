@@ -223,7 +223,7 @@ app.post('/api/cluster', async (req, res) => {
     }));
 
     const response = await axios.post(
-      'http://127.0.0.1:5000/kmeans',
+      'hhttps://binaphoto-ml.onrender.com/kmeans',
       dataKirim
     );
 
@@ -432,7 +432,7 @@ app.post('/api/predict', async (req, res) => {
     if (error) throw error;
 
     const response = await axios.post(
-      'http://127.0.0.1:5000/random-forest',
+      'https://binaphoto-ml.onrender.com/random-forest',
       data
     );
 
@@ -465,6 +465,8 @@ app.post('/api/predict', async (req, res) => {
 });
 
 // ================== RUN SERVER ==================
-app.listen(3000, () => {
-  console.log('Server jalan di http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server jalan di port ${PORT}`);
 });
