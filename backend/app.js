@@ -223,7 +223,7 @@ app.post('/api/cluster', async (req, res) => {
     }));
 
     const response = await axios.post(
-      'hhttps://binaphoto-ml.onrender.com/kmeans',
+      'https://binaphoto-ml.onrender.com/kmeans',
       dataKirim
     );
 
