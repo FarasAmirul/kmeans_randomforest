@@ -272,7 +272,7 @@ if (insertError) {
 });
 
 // ================== GET CLUSTERING ==================
-app.post('/api/clustering', async (req, res) => {
+app.get('/api/clustering', async (req, res) => {
   try {
 
     const { data, error } = await supabase
