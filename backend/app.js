@@ -222,14 +222,17 @@ app.post('/api/cluster', async (req, res) => {
       frekuensi: d.frekuensi
     }));
 
-    console.log('Kirim ke ML:', dataKirim);
+    console.log('====================');
+    console.log('KIRIM KE ML');
+    console.log(dataKirim);
 
-const response = await axios.post(
-  'https://binaphoto-ml.onrender.com/kmeans',
-  dataKirim
-);
+    const response = await axios.post(
+      'https://binaphoto-ml.onrender.com/kmeans',
+      dataKirim
+    );
 
-console.log('Hasil ML:', response.data);
+    console.log('HASIL ML');
+    console.log(response.data);
 
     const hasilCluster = response.data;
 
@@ -238,26 +241,29 @@ console.log('Hasil ML:', response.data);
       cluster: item.cluster
     }));
 
-    const { data: deletedRows, error: deleteError } = await supabase
-  .from('clustering')
-  .delete()
-  .neq('id', 0)
-  .select();
+    console.log('DATA INSERT');
+    console.log(dataInsert);
 
-console.log('Deleted Rows:', deletedRows);
-console.log('Delete Error:', deleteError);
+    const { error: deleteError } = await supabase
+      .from('clustering')
+      .delete()
+      .neq('id', 0);
 
-if (deleteError) {
-  throw deleteError;
-}
+    if (deleteError) {
+      console.log('DELETE ERROR');
+      console.log(deleteError);
+      throw deleteError;
+    }
 
-const { error: insertError } = await supabase
-  .from('clustering')
-  .insert(dataInsert);
+    const { error: insertError } = await supabase
+      .from('clustering')
+      .insert(dataInsert);
 
-if (insertError) {
-  throw insertError;
-}
+    if (insertError) {
+      console.log('INSERT ERROR');
+      console.log(insertError);
+      throw insertError;
+    }
 
     res.json({
       message: 'Clustering berhasil & disimpan',
@@ -265,6 +271,18 @@ if (insertError) {
     });
 
   } catch (err) {
+
+    console.log('====================');
+    console.log('ERROR CLUSTERING');
+    console.log('MESSAGE:', err.message);
+
+    if (err.response) {
+      console.log('STATUS:', err.response.status);
+      console.log('DATA:', err.response.data);
+    }
+
+    console.log('====================');
+
     res.status(500).json({
       error: err.message
     });
