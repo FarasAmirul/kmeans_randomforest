@@ -126,7 +126,7 @@ app.post('/api/upload-dataset', upload.single('file'), async (req, res) => {
         }
 
         res.json({
-          message: 'Dataset lama diganti dengan dataset baru',
+          message: 'Berhasil upload dataset baru',
           total_data: results.length
         });
 
@@ -272,7 +272,7 @@ if (insertError) {
 });
 
 // ================== GET CLUSTERING ==================
-app.get('/api/clustering', async (req, res) => {
+app.post('/api/clustering', async (req, res) => {
   try {
 
     const { data, error } = await supabase
