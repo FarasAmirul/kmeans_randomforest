@@ -222,10 +222,14 @@ app.post('/api/cluster', async (req, res) => {
       frekuensi: d.frekuensi
     }));
 
-    const response = await axios.post(
-      'https://binaphoto-ml.onrender.com/kmeans',
-      dataKirim
-    );
+    console.log('Kirim ke ML:', dataKirim);
+
+const response = await axios.post(
+  'https://binaphoto-ml.onrender.com/kmeans',
+  dataKirim
+);
+
+console.log('Hasil ML:', response.data);
 
     const hasilCluster = response.data;
 
@@ -234,16 +238,26 @@ app.post('/api/cluster', async (req, res) => {
       cluster: item.cluster
     }));
 
-    await supabase
-      .from('clustering')
-      .delete()
-      .neq('id', 0);
+    const { data: deletedRows, error: deleteError } = await supabase
+  .from('clustering')
+  .delete()
+  .neq('id', 0)
+  .select();
 
-    const { error: insertError } = await supabase
-      .from('clustering')
-      .insert(dataInsert);
+console.log('Deleted Rows:', deletedRows);
+console.log('Delete Error:', deleteError);
 
-    if (insertError) throw insertError;
+if (deleteError) {
+  throw deleteError;
+}
+
+const { error: insertError } = await supabase
+  .from('clustering')
+  .insert(dataInsert);
+
+if (insertError) {
+  throw insertError;
+}
 
     res.json({
       message: 'Clustering berhasil & disimpan',
